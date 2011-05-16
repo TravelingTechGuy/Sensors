@@ -16,6 +16,15 @@ namespace Sensors
             Farrenheit
         }
 
+        public struct TemperatureResult
+        {
+            public double Voltage;
+            public string VoltageString;
+            public double Temperature;
+            public string TemperatureString;
+            public TemperatureType Type;
+        }
+
         public TemperatureSensor(Cpu.Pin pin)
         {
             sensor = new AnalogInput(pin);
@@ -45,7 +54,7 @@ namespace Sensors
         /// </summary>
         /// <param name="ttype">Should temperature be in Cellsius degrees or Farrenheit</param>
         /// <returns>string containing interpretation of value from CS</returns>
-        public string GetTemperature(TemperatureType ttype = TemperatureType.Cellsius, bool includeVoltage = false)
+        public TemperatureResult GetTemperature(TemperatureType ttype = TemperatureType.Cellsius)
         {
             //getting the voltage reading from the temperature sensor
             int reading = GetRaw();
@@ -59,8 +68,19 @@ namespace Sensors
             // now convert to Farrenheit
             double temperatureF = (temperatureC * 9.0 / 5.0) + 32.0;
 
-            string result = includeVoltage ? (voltage.ToString("F") + "v,") : string.Empty;
-            result += (ttype == TemperatureType.Cellsius) ? (temperatureC.ToString("F") + "C") : (temperatureF.ToString("F") + "F");
+            TemperatureResult result = new TemperatureResult();
+            result.Voltage = voltage;
+            result.VoltageString = voltage.ToString("F") + "v";
+            if (ttype == TemperatureType.Cellsius)
+            {
+                result.Temperature = temperatureC;
+                result.TemperatureString = temperatureC.ToString("F") + "C";
+            }
+            else
+            {
+                result.Temperature = temperatureF;
+                result.TemperatureString = temperatureC.ToString("F") + "F";
+            }
             return result;
         }
     }

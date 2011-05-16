@@ -12,34 +12,35 @@ namespace Sensors
 {
     public class Program
     {
-        private static string fileName = "log.csv";
+        private static string fileName = "sensors-log.csv";
 
         public static void Main()
         {
             LCD lcd = new LCD();
             LightSensor light = new LightSensor(Pins.GPIO_PIN_A0);
             TemperatureSensor temp = new TemperatureSensor(Pins.GPIO_PIN_A1);
-            
-            while (true)
+
+           while (true)
             {
-                long loop = 0;
-                string tempResult = temp.GetTemperature(TemperatureSensor.TemperatureType.Cellsius, true);
-                string lightResult = light.GetLightCondition(true);
+                TemperatureSensor.TemperatureResult tempResult = temp.GetTemperature(TemperatureSensor.TemperatureType.Cellsius);
+                LightSensor.LightSensingResult lightResult = light.GetLightCondition();
                 lcd.Clear();
-                lcd.Write(tempResult);
+                lcd.Write(tempResult.TemperatureString);
                 lcd.SetCursorPosition(0, 1);
-                lcd.Write(lightResult);
-                Thread.Sleep(10000);    //measure every 10 seconds
-                loop++;
-                if (loop % (6 * 60) == 0)   //write to disk once an hour
+                lcd.Write(lightResult.LightConditionString);
+                long secondsSinceReset = (Utility.GetMachineTime().Ticks / 10000000);
+                if (secondsSinceReset % 10 == 0)   //write to disk every 10 seconds
                 {
-                    string id = (loop / (6 * 60)).ToString();
-                    WriteToFile(id, tempResult, lightResult);
+                    string line = secondsSinceReset.ToString() + "," 
+                        + tempResult.VoltageString + "," + tempResult.TemperatureString 
+                        + lightResult.SensorReading.ToString() + "," + lightResult.LightConditionString;
+                    WriteToFile(line);
                 }
+                Thread.Sleep(1000);    //measure every 1 second
             }
         }
 
-        public static bool WriteToFile(string id, string temperature, string light)
+        public static bool WriteToFile(string line)
         {
             string path = @"\SD\" + fileName;
             TextWriter file;
@@ -48,18 +49,17 @@ namespace Sensors
                 if (!File.Exists(path))
                 {
                     file = new StreamWriter(path, false);
-                    file.WriteLine("ID,Voltage,Temperature,Sense,Light");
-                    file.WriteLine(id + "," + temperature + "," + light);
+                    file.WriteLine("Seconds,Voltage,Temperature,CDS,Light");
                 }
                 else
                 {
                     file = new StreamWriter(path, true);
-                    file.WriteLine(id + "," + temperature + "," + light);
                 }
+                file.WriteLine(line);
                 file.Close();
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }

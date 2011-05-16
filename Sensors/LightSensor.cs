@@ -10,6 +10,12 @@ namespace Sensors
     {
         private AnalogInput sensor;
 
+        public struct LightSensingResult
+        {
+            public int SensorReading;
+            public string LightConditionString;
+        }
+
         public LightSensor(Cpu.Pin pin)
         {
             sensor = new AnalogInput(pin);
@@ -19,7 +25,7 @@ namespace Sensors
         /// Get CDS sensor value
         /// </summary>
         /// <returns>Raw value from sensor</returns>
-        public int GetRaw()
+        public int GetRawReading()
         {
             return sensor.Read();
         }
@@ -29,31 +35,31 @@ namespace Sensors
         /// Values may change depending on the resistor connected to the CDS
         /// See http://www.ladyada.net/learn/sensors/cds.html
         /// </summary>
-        /// <param name="withValue">Should raw value be returned as part of string (default no)</param>
-        /// <returns>string containing interpretation of value from CS</returns>
-        public string GetLightCondition(bool withValue = false)
+        /// <returns>Sensing result struct, cointaining both raw data and interpretaion</returns>
+        public LightSensingResult GetLightCondition()
         {
-            int reading = GetRaw();
-            string result = withValue ? (reading.ToString() + ",") : string.Empty;
-            if (reading < 10)
+            LightSensingResult result = new LightSensingResult();
+            result.SensorReading = GetRawReading();
+
+            if (result.SensorReading < 10)
             {
-                result += "Dark";
+                result.LightConditionString = "Dark";
             }
-            else if (reading < 200)
+            else if (result.SensorReading < 200)
             {
-                result += "Dim";
+                result.LightConditionString = "Dim";
             }
-            else if (reading < 500)
+            else if (result.SensorReading < 500)
             {
-                result += "Light";
+                result.LightConditionString = "Light";
             }
-            else if (reading < 800)
+            else if (result.SensorReading < 800)
             {
-                result += "Bright";
+                result.LightConditionString = "Bright";
             }
             else
             {
-                result += "Very bright";
+                result.LightConditionString = "Very bright";
             }
             return result;
         }
