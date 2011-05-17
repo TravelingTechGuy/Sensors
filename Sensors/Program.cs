@@ -31,8 +31,8 @@ namespace Sensors
                 long secondsSinceReset = (Utility.GetMachineTime().Ticks / 10000000);
                 if (secondsSinceReset % 10 == 0)   //write to disk every 10 seconds
                 {
-                    string line = secondsSinceReset.ToString() + "," 
-                        + tempResult.VoltageString + "," + tempResult.TemperatureString 
+                    string line = secondsSinceReset.ToString() + ","
+                        + tempResult.VoltageString + "," + tempResult.TemperatureString + ","
                         + lightResult.SensorReading.ToString() + "," + lightResult.LightConditionString;
                     WriteToFile(line);
                 }
