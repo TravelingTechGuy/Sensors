@@ -69,6 +69,7 @@ namespace Sensors
             double temperatureF = (temperatureC * 9.0 / 5.0) + 32.0;
 
             TemperatureResult result = new TemperatureResult();
+            result.Type = ttype;
             result.Voltage = voltage;
             result.VoltageString = voltage.ToString("F") + "v";
             if (ttype == TemperatureType.Cellsius)

@@ -13,14 +13,22 @@ namespace Sensors
     public class Program
     {
         private static string fileName = "sensors-log.csv";
-
+        private static LCD lcd;
+        private static LightSensor light;
+        private static TemperatureSensor temp;
+        
         public static void Main()
         {
-            LCD lcd = new LCD();
-            LightSensor light = new LightSensor(Pins.GPIO_PIN_A0);
-            TemperatureSensor temp = new TemperatureSensor(Pins.GPIO_PIN_A1);
+            lcd = new LCD();
+            light = new LightSensor(Pins.GPIO_PIN_A0);
+            temp = new TemperatureSensor(Pins.GPIO_PIN_A1);
+            StartSensing();
+        }
 
-           while (true)
+
+        private static void StartSensing()
+        {
+            while (true)
             {
                 TemperatureSensor.TemperatureResult tempResult = temp.GetTemperature(TemperatureSensor.TemperatureType.Cellsius);
                 LightSensor.LightSensingResult lightResult = light.GetLightCondition();
