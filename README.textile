@@ -11,4 +11,4 @@ It shows the results of the sensors on the LCD, and attempts to send them to a P
 
 It uses the following libraries (with thanks and rights to the respective authors):
 # "MicroLiquidCrystal":http://microliquidcrystal.codeplex.com/ by Szymon Kobalczyk
-# "Pachube Client":http://www.gsiot.info/download/ from Getting Started with the Internet of Things by Cuno Pfister
+# "Pachube -Client-Socket":http://www.gsiot.info/download/ from Getting Started with the Internet of Things by Cuno Pfister
