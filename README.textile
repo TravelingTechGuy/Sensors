@@ -1,4 +1,4 @@
-h3. Sensor project
+h3. Sensors project
 
 This project uses:
 # A Netduino Plus
