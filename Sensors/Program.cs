@@ -1,10 +1,5 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
-using Microsoft.SPOT;
+﻿using System.Threading;
 using Microsoft.SPOT.Hardware;
-using SecretLabs.NETMF.Hardware;
 using SecretLabs.NETMF.Hardware.NetduinoPlus;
 
 namespace Sensors
@@ -15,7 +10,7 @@ namespace Sensors
         private static LightSensor light;
         private static TemperatureSensor temp;
         private static SDCard sd = new SDCard();
-        private static Pachube pachube = new Pachube();
+        private static PachubeSockets pachube = new PachubeSockets();
         
         public static void Main()
         {
@@ -40,7 +35,11 @@ namespace Sensors
                         + tempResult.VoltageString + "," + tempResult.TemperatureString + ","
                         + lightResult.SensorReading.ToString() + "," + lightResult.LightConditionString;
                     sd.WriteToFile(line);
-                    pachube.WriteToPachube(lightResult.LightConditionString, tempResult.TemperatureString);
+
+                    line = "light," + lightResult.SensorReading.ToString()
+                        + "\r\n" 
+                        + "temp," + tempResult.TemperatureString.TrimEnd('C');
+                    pachube.WriteToPachube(line);
                 }
                 Thread.Sleep(1000);    //measure every 1 second
             }

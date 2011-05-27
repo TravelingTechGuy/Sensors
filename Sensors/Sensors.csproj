@@ -33,6 +33,7 @@
     <Compile Include="Pachube.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PachubeSockets.cs" />
     <Compile Include="SDCard.cs" />
     <Compile Include="TemperatureSensor.cs" />
     <Compile Include="LCD.cs" />
@@ -50,10 +51,6 @@
     <Reference Include="System.IO" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gsiot.PachubeClient\Gsiot.PachubeClient.csproj">
-      <Project>{F10CB90A-0F60-4F19-815E-4F83F77B6841}</Project>
-      <Name>Gsiot.PachubeClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MicroLiquidCrystal\MicroLiquidCrystal.csproj">
       <Project>{B4B72543-E638-44F1-B096-9BBB6BD4698B}</Project>
       <Name>MicroLiquidCrystal</Name>
