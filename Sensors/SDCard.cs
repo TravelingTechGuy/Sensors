@@ -6,7 +6,7 @@ namespace Sensors
 {
     class SDCard
     {
-        private string fileName = "sensors-log.csv";
+        private const string fileName = "sensors-log.csv";
 
         public bool WriteToFile(string line)
         {
@@ -29,6 +29,7 @@ namespace Sensors
             }
             catch (Exception ex)
             {
+                Debug.Print(ex.Message);
                 return false;
             }
         }

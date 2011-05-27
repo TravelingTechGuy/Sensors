@@ -6,8 +6,8 @@ namespace Sensors
 {
     class Pachube
     {
-        private const string apiKey = "ADD YOUR KEY";
-        private const string feedId = "ADD YOUR FEED NUMBER";
+        private const string apiKey = "Add your key here";
+        private const string feedId = "25788";
 
         public bool WriteToPachube(string light, string temperature)
         {
