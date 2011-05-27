@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -12,10 +11,11 @@ namespace Sensors
 {
     public class Program
     {
-        private static string fileName = "sensors-log.csv";
         private static LCD lcd;
         private static LightSensor light;
         private static TemperatureSensor temp;
+        private static SDCard sd = new SDCard();
+        private static Pachube pachube = new Pachube();
         
         public static void Main()
         {
@@ -32,46 +32,26 @@ namespace Sensors
             {
                 TemperatureSensor.TemperatureResult tempResult = temp.GetTemperature(TemperatureSensor.TemperatureType.Cellsius);
                 LightSensor.LightSensingResult lightResult = light.GetLightCondition();
-                lcd.Clear();
-                lcd.Write(tempResult.TemperatureString);
-                lcd.SetCursorPosition(0, 1);
-                lcd.Write(lightResult.LightConditionString);
+                ShowResultsOnLCD(tempResult.TemperatureString, lightResult.LightConditionString);
                 long secondsSinceReset = (Utility.GetMachineTime().Ticks / 10000000);
-                if (secondsSinceReset % 10 == 0)   //write to disk every 10 seconds
+                if (secondsSinceReset % 20 == 0)   //write to disk every 20 seconds
                 {
                     string line = secondsSinceReset.ToString() + ","
                         + tempResult.VoltageString + "," + tempResult.TemperatureString + ","
                         + lightResult.SensorReading.ToString() + "," + lightResult.LightConditionString;
-                    WriteToFile(line);
+                    sd.WriteToFile(line);
+                    pachube.WriteToPachube(lightResult.LightConditionString, tempResult.TemperatureString);
                 }
                 Thread.Sleep(1000);    //measure every 1 second
             }
         }
 
-        public static bool WriteToFile(string line)
+        private static void ShowResultsOnLCD(string tempResult, string lightResult)
         {
-            string path = @"\SD\" + fileName;
-            TextWriter file;
-            try
-            {
-                if (!File.Exists(path))
-                {
-                    file = new StreamWriter(path, false);
-                    file.WriteLine("Seconds,Voltage,Temperature,CDS,Light");
-                }
-                else
-                {
-                    file = new StreamWriter(path, true);
-                }
-                file.WriteLine(line);
-                file.Close();
-                return true;
-            }
-            catch(Exception ex)
-            {
-                return false;
-            }
+            lcd.Clear();
+            lcd.Write(tempResult);
+            lcd.SetCursorPosition(0, 1);
+            lcd.Write(lightResult);
         }
-
     }
 }
