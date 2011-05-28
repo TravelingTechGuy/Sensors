@@ -30,9 +30,6 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
-    <Compile Include="Pachube.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PachubeSockets.cs" />
     <Compile Include="SDCard.cs" />
     <Compile Include="TemperatureSensor.cs" />

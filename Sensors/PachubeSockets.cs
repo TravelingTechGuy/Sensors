@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -7,7 +8,7 @@ namespace Sensors
 {
     public class PachubeSockets
     {
-        private const string apiKey = "YOUR API KEY";
+        private const string apiKey = "S1lxnWOv4P-bh5t2yig9oZPVgnBeAo4DubGLG09ppgk";
         private const string feedId = "25788";
 
         public bool WriteToPachube(string sample)
@@ -19,21 +20,24 @@ namespace Sensors
             {
                 connection = Connect("api.pachube.com", 5000);
             }
-            catch
+            catch(Exception ex)
             {
-                Debug.Print("connection error");
+                Debug.Print("Connection error");
+                Debug.Print(ex.Message);
             }
 
             if (connection != null)
             {
                 try
                 {
+                    Debug.Print("Sending " + sample);
                     SendRequest(connection, apiKey, feedId, sample);
+                    Debug.Print("Sent");
                     result = true;
                 }
                 catch (SocketException ex)
                 {
-                    Debug.Print("sending error");
+                    Debug.Print("Send error");
                     Debug.Print(ex.Message);
                 }
                 finally
@@ -54,11 +58,12 @@ namespace Sensors
             IPEndPoint remoteEndPoint = new IPEndPoint(hostAddress, 80);
 
             // connect!
-            Debug.Print("connect...");
+            Debug.Print("Connecting to " + hostAddress + " over port 80");
             var connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             connection.Connect(remoteEndPoint);
             connection.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
             connection.SendTimeout = timeout;
+            Debug.Print("Connected!");
             return connection;
         }
 
