@@ -13,4 +13,5 @@ It uses the following libraries (with thanks and rights to the respective author
 # "MicroLiquidCrystal":http://microliquidcrystal.codeplex.com/ by Szymon Kobalczyk
 # -Pachube Client- "Pachube Socket":http://www.gsiot.info/download/ from Getting Started with the Internet of Things by Cuno Pfister
 
+This is a "short video":http://www.youtube.com/watch?v=AjJpGcelyeQ I took of the result, before adding the Pachube code
 This is the resulting Pachube Feed: "http://www.pachube.com/feeds/25788":http://www.pachube.com/feeds/25788
