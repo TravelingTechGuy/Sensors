@@ -14,30 +14,20 @@ namespace Sensors
         public bool WriteToPachube(string sample)
         {
             bool result = false;
-            Socket connection = null;
-
-            try
-            {
-                connection = Connect("api.pachube.com", 5000);
-            }
-            catch(Exception ex)
-            {
-                Debug.Print("Connection error");
-                Debug.Print(ex.Message);
-            }
+            Socket connection = Connect("api.pachube.com", 5000);
 
             if (connection != null)
             {
                 try
                 {
-                    Debug.Print("Sending " + sample);
+                    Debug.Print("Pachube: Sending " + sample);
                     SendRequest(connection, apiKey, feedId, sample);
-                    Debug.Print("Sent");
+                    Debug.Print("Pachube: Sample sent");
                     result = true;
                 }
                 catch (SocketException ex)
                 {
-                    Debug.Print("Send error");
+                    Debug.Print("Pachube: Send error");
                     Debug.Print(ex.Message);
                 }
                 finally
@@ -51,20 +41,30 @@ namespace Sensors
 
         private Socket Connect(string host, int timeout)
         {
-            // look up host's domain name, to find IP address(es)
-            IPHostEntry hostEntry = Dns.GetHostEntry(host);
-            // extract a returned address
-            IPAddress hostAddress = hostEntry.AddressList[0];
-            IPEndPoint remoteEndPoint = new IPEndPoint(hostAddress, 80);
+            Socket connection;
+            try
+            {
+                // look up host's domain name, to find IP address(es)
+                IPHostEntry hostEntry = Dns.GetHostEntry(host);
+                // extract a returned address
+                IPAddress hostAddress = hostEntry.AddressList[0];
+                IPEndPoint remoteEndPoint = new IPEndPoint(hostAddress, 80);
 
-            // connect!
-            Debug.Print("Connecting to " + hostAddress + " over port 80");
-            var connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            connection.Connect(remoteEndPoint);
-            connection.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
-            connection.SendTimeout = timeout;
-            Debug.Print("Connected!");
-            return connection;
+                // connect!
+                Debug.Print("Pachube: Connecting to " + hostAddress + " over port 80");
+                connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                connection.Connect(remoteEndPoint);
+                connection.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+                connection.SendTimeout = timeout;
+                Debug.Print("Pachube: Connected!");
+                return connection;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("Pachube: Connection error");
+                Debug.Print(ex.Message);
+                return null;
+            }
         }
 
         private void SendRequest(Socket s, string apiKey, string feedId, string content)

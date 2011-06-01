@@ -15,8 +15,8 @@ namespace Sensors
         public static void Main()
         {
             lcd = new LCD();
-            light = new LightSensor(Pins.GPIO_PIN_A0);
-            temp = new TemperatureSensor(Pins.GPIO_PIN_A1);
+            temp = new TemperatureSensor(Pins.GPIO_PIN_A4);
+            light = new LightSensor(Pins.GPIO_PIN_A5);
             StartSensing();
         }
 
